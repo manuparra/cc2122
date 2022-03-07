@@ -15,9 +15,9 @@
 
 ## Session 2
 
-- Intro to containers orquestrators
-- Tool 1: Docker-Compose
-- Tool 2: Singularity-Compose
+- [Intro to containers orquestrators](./session2/README.md#session-2-intro-to-containers-orchestrators)
+- [Tool 1: Docker-Compose](./session2/README.md#session-2-docker-compose)
+- [Tool 2: Singularity-Compose](./session2/README.md#session-2-singularity-compose)
 - Example of a Cloud Computing deployment
 
 ## Session 3
@@ -26,17 +26,18 @@ Containers with Singularity
 
 ### Docker
 
-- Our first container: How to
+- [Our first container: How to](./session3/README.md#session-3-docker---introduction)
 - Docker + Docker compose with Monitoring
+
 
 ### Singularity
 
-- Introduction to Singularity
-- Install and Set-up Singularity
-- Starting with Singularity containers
+- [Introduction to Singularity](./session3/README.md#session-3-singularity)
+- [Install and Set-up Singularity](./session3/README.md#installing-and-set-up-singularity)
+- [Starting with Singularity containers](./session3/README.md#starting-with-singularity-containers)
 
 ### Kubernetes 
 
-- Introduction to kubernetes
-- How to deploy your local kubernets instance
+- Introduction to kubernetes 
+- How to deploy your local kubernets instance (with minikube)
 - Manage, deploy and usage of the kubernetes
