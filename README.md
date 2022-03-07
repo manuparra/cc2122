@@ -16,8 +16,8 @@
 ## Session 2
 
 - Intro to containers orquestrators
-- Tool1: Docker-Compose
-- Tool2: Singularity-Compose
+- Tool 1: Docker-Compose
+- Tool 2: Singularity-Compose
 
 ## Session 3
 
