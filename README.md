@@ -18,6 +18,7 @@
 - Intro to containers orquestrators
 - Tool 1: Docker-Compose
 - Tool 2: Singularity-Compose
+- Example of a Cloud Computing deployment
 
 ## Session 3
 
