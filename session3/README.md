@@ -409,6 +409,7 @@ version: '3'
 
 services:
   prometheus:
+    container_name: node-prom
     image: prom/prometheus:v2.30.3
     ports:
       - 9090:9090
@@ -417,9 +418,9 @@ services:
       - prometheus-data:/prometheus
     command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml
 
-
 volumes:
   prometheus-data:
+
 ```
 
 Then type the following:
@@ -428,16 +429,61 @@ Then type the following:
 docker-compose up -d
 ```
 
-And open a browser with this URL: http://localhost:9090
+And open a browser with this URL: http://localhost:9090 for Prometheus.
+
+Then type:
+
+```
+docker-compose down
+```
 
 Now we are going to drop this service to add Grafana as a Prometheus stats visualizer. Add to the services level the following:
 
 ```
-grafana:
-		image: grafana:latest
-		ports:
-			- '3000:3000'
+  grafana:
+    container_name: node-grafana
+    image: grafana/grafana-oss
+    ports:
+      - 3000:3000
 ```
+
+And add Node-Exporter to the docker-compose.yml:
+
+```
+node-exporter:
+    container_name: node1-exporter
+    image: prom/node-exporter
+    ports:
+      - 9100:9100
+```
+
+Then, run again:
+
+```
+docker-compose up -d
+```
+
+And open in your browser 3 tabs:
+- http://localhost:9090 For Prometheus server
+- http://localhost:9100 For Node Exporter
+- http://localhost:3000 For Grafana
+
+Check if all the services are running.
+
+### Adding a HAProxy
+
+Add the following to you docker-compose.yml:
+
+```
+haproxy:
+    image: haproxy:1.6
+    volumes:
+        - ./haproxy:/haproxy-override
+        - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    ports:
+        - "8080:80"        
+```
+
 
 
 
