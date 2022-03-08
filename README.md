@@ -22,7 +22,7 @@
 
 ## Session 3
 
-Containers with Singularity
+Containers with Docker, Singularity and Kubernetes.
 
 ### Docker
 
