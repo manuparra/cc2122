@@ -1,3 +1,44 @@
+<h1>Session 3: Docker, Singularity and Kubernetes</h1>
+
+- [Session 3 Docker - Introduction](#session-3-docker---introduction)
+  * [Introduction to containers](#introduction-to-containers)
+    + [1. What are containers](#1-what-are-containers)
+    + [2. What containers are not](#2-what-containers-are-not)
+    + [3. Why do you (and don't) need containers](#3-why-do-you--and-don-t--need-containers)
+  * [Introduction to Docker](#introduction-to-docker)
+    + [In this section you will learn](#in-this-section-you-will-learn)
+    + [1. Running first Docker container](#1-running-first-docker-container)
+      - [**Let's examine the command and the generated output step by step.**](#--let-s-examine-the-command-and-the-generated-output-step-by-step--)
+    + [2. Managing Docker images](#2-managing-docker-images)
+    + [3. Managing Docker containers](#3-managing-docker-containers)
+    + [4. Working with Docker containers](#4-working-with-docker-containers)
+  * [Docker+Docker compose with a monitoring system](#docker-docker-compose-with-a-monitoring-system)
+    + [Adding a HAProxy](#adding-a-haproxy)
+- [Session 3 Singularity](#session-3-singularity)
+  * [Introduction to Singularity](#introduction-to-singularity)
+    + [How do containers differ from virtual machines (VMs)](#how-do-containers-differ-from-virtual-machines--vms-)
+    + [Docker](#docker)
+    + [Singularity](#singularity)
+  * [Installing and Set-up Singularity](#installing-and-set-up-singularity)
+  * [Starting with Singularity containers](#starting-with-singularity-containers)
+    + [Aims](#aims)
+    + [The Singularity container image](#the-singularity-container-image)
+      - [Supported container formats](#supported-container-formats)
+      - [Supported Unified Resource Identifiers (URIs)](#supported-unified-resource-identifiers--uris-)
+      - [Copying, sharing, branching, and distributing your image](#copying--sharing--branching--and-distributing-your-image)
+    + [Preparing the work environment](#preparing-the-work-environment)
+    + [The Singularity Usage Workflow](#the-singularity-usage-workflow)
+    + [Singularity Commands](#singularity-commands)
+    + [Run a test](#run-a-test)
+    + [Using an image for SKA training](#using-an-image-for-ska-training)
+    + [Pulling the new image](#pulling-the-new-image)
+    + [Entering the images from a shell](#entering-the-images-from-a-shell)
+    + [Executing command from a container](#executing-command-from-a-container)
+    + [Running a container](#running-a-container)
+    + [Build images](#build-images)
+    + [Downloading a container from Docker Hub](#downloading-a-container-from-docker-hub)
+    + [Building containers from Singularity definition files](#building-containers-from-singularity-definition-files)
+
 # Session 3 Docker - Introduction
 
 ## Introduction to containers
@@ -359,6 +400,135 @@ I have no name!@46023ae04069:/$
 ```
 
 We have launched a new container with user ID 1000 and group ID 1000 (the format is `--user [user ID]:[group ID]`. As we have not created this user inside the container, Docker has no idea who that user is exactly, but we can still perform various tasks with the same permissions as the original user on the host OS.
+
+## Docker+Docker compose with a monitoring system
+
+We are going to deploy a Basic monitoring version that allows to serve Prometheus + NodeExporter.
+
+Create a project/folder:
+
+```
+mkdir prometheus
+cd prometheus
+```
+
+Create a file and include the following:
+
+```
+global:
+  scrape_interval: 30s
+  scrape_timeout: 10s
+
+rule_files:
+  - alert.yml
+
+scrape_configs:
+  - job_name: services
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - 'prometheus:9090'
+          - 'idonotexists:564'
+
+```
+
+Then create a alert.yml file
+
+```
+groups:
+  - name: DemoAlerts
+    rules:
+      - alert: InstanceDown 
+        expr: up{job="services"} < 1 
+        for: 5m
+```
+
+Finally create a docker-compose.yml file
+
+```
+version: '3'
+
+services:
+  prometheus:
+    container_name: node-prom
+    image: prom/prometheus:v2.30.3
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml
+
+volumes:
+  prometheus-data:
+
+```
+
+Then type the following:
+
+```
+docker-compose up -d
+```
+
+And open a browser with this URL: http://localhost:9090 for Prometheus.
+
+Then type:
+
+```
+docker-compose down
+```
+
+Now we are going to drop this service to add Grafana as a Prometheus stats visualizer. Add to the services level the following:
+
+```
+  grafana:
+    container_name: node-grafana
+    image: grafana/grafana-oss
+    ports:
+      - 3000:3000
+```
+
+And add Node-Exporter to the docker-compose.yml:
+
+```
+node-exporter:
+    container_name: node1-exporter
+    image: prom/node-exporter
+    ports:
+      - 9100:9100
+```
+
+Then, run again:
+
+```
+docker-compose up -d
+```
+
+And open in your browser 3 tabs:
+- http://localhost:9090 For Prometheus server
+- http://localhost:9100 For Node Exporter
+- http://localhost:3000 For Grafana
+
+Check if all the services are running.
+
+### Adding a HAProxy
+
+Add the following to you docker-compose.yml:
+
+```
+haproxy:
+    image: haproxy:1.6
+    volumes:
+        - ./haproxy:/haproxy-override
+        - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    ports:
+        - "8080:80"        
+```
+
+
+
+
+
 
 # Session 3 Singularity
 

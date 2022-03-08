@@ -27,7 +27,7 @@ Containers with Singularity
 ### Docker
 
 - [Our first container: How to](./session3/README.md#session-3-docker---introduction)
-- Docker + Docker compose with Monitoring
+- [Docker + Docker compose with Monitoring](./session3/README.md#dockerdocker-compose-with-a-monitoring-system)
 
 
 ### Singularity
