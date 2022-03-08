@@ -1,3 +1,4 @@
+<h1>Session 3: Docker, Singularity and Kubernetes</h1>
 
 - [Session 3 Docker - Introduction](#session-3-docker---introduction)
   * [Introduction to containers](#introduction-to-containers)
