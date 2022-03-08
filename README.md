@@ -38,6 +38,6 @@ Containers with Singularity
 
 ### Kubernetes 
 
-- Introduction to kubernetes 
-- How to deploy your local kubernets instance (with minikube)
+- [Introduction to kubernetes](./session3/README.md#session-3-kubernetes)
+- [How to deploy your local kubernets instance (with minikube)](./session3/README.md#session-3-kubernetes)
 - Manage, deploy and usage of the kubernetes
