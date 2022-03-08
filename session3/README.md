@@ -360,6 +360,89 @@ I have no name!@46023ae04069:/$
 
 We have launched a new container with user ID 1000 and group ID 1000 (the format is `--user [user ID]:[group ID]`. As we have not created this user inside the container, Docker has no idea who that user is exactly, but we can still perform various tasks with the same permissions as the original user on the host OS.
 
+## Docker+Docker compose with a monitoring system
+
+We are going to deploy a Basic monitoring version that allows to serve Prometheus + NodeExporter.
+
+Create a project/folder:
+
+```
+mkdir prometheus
+cd prometheus
+```
+
+Create a file and include the following:
+
+```
+global:
+  scrape_interval: 30s
+  scrape_timeout: 10s
+
+rule_files:
+  - alert.yml
+
+scrape_configs:
+  - job_name: services
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - 'prometheus:9090'
+          - 'idonotexists:564'
+
+```
+
+Then create a alert.yml file
+
+```
+groups:
+  - name: DemoAlerts
+    rules:
+      - alert: InstanceDown 
+        expr: up{job="services"} < 1 
+        for: 5m
+```
+
+Finally create a docker-compose.yml file
+
+```
+version: '3'
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.30.3
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    command: --web.enable-lifecycle  --config.file=/etc/prometheus/prometheus.yml
+
+
+volumes:
+  prometheus-data:
+```
+
+Then type the following:
+
+```
+docker-compose up -d
+```
+
+And open a browser with this URL: http://localhost:9090
+
+Now we are going to drop this service to add Grafana as a Prometheus stats visualizer. Add to the services level the following:
+
+```
+grafana:
+		image: grafana:latest
+		ports:
+			- '3000:3000'
+```
+
+
+
+
+
 # Session 3 Singularity
 
 ## Introduction to Singularity
