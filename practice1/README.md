@@ -42,17 +42,12 @@ Prometheus es un conjunto de herramientas de monitorización y alerta de sistema
 Prometheus recopila y almacena sus métricas como datos de series temporales, es decir, la información de las métricas se almacena con la marca de tiempo en la que se registró, junto con pares clave-valor opcionales llamados etiquetas que contienen los valores a monitorizar: CPU, RAM, etc.
 
 Las principales características de Prometheus son
+ - un modelo de datos multidimensional con datos de series temporales identificados por el nombre de la métrica y los pares clave/valor
+ - no depende del almacenamiento distribuido; los nodos del servidor son autónomos
+- la recopilación de series temporales se realiza mediante un modelo de extracción a través de HTTP
+- los objetivos se descubren mediante el descubrimiento de servicios o la configuración estática
 
-    - un modelo de datos multidimensional con datos de series temporales identificados por el nombre de la métrica y los pares clave/valor
-  
-    - no depende del almacenamiento distribuido; los nodos del servidor son autónomos
-
-
-    - la recopilación de series temporales se realiza mediante un modelo de extracción a través de HTTP
-
-
-    - los objetivos se descubren mediante el descubrimiento de servicios o la configuración estática
-
+Prometheus tiene múltiples módulos, nosotros solo usaremos: Prometheus server y Prometheus Node Exporter.
 
 #### Grafana
 
@@ -95,7 +90,7 @@ Con esta opción al igual que la anterior se requiere que se incluyan todos los 
 - Grafana community
 - HAProxy
 
-Dada la capacidad de `docker-compose` para automatizar el ciclo de vida de los servicios, solo será necesario crear el fichero `docker-compose.yml` que incluya todos los servicios descritos anteriormente.
+Dada la capacidad de `docker-compose` para automatizar el ciclo de vida de los servicios, solo será necesario crear el fichero `docker-compose.yml` que incluya todos los servicios descritos anteriormente y los demás fichero auxiliares de configuración.
 
 #### Kubernetes
 
@@ -266,9 +261,9 @@ La documentación de la entrega debe contener:
 - Será necesario incluir todos los ficheros necesarios para el despliegue de los servicios que has creado.
 - Material auxiliar (imágenes para la documentación, ficheros de configuración, etc.)
 
-Para la entrega en PRADO, haz un fichero `.ZIP` con todo el contenido anterior y súbelo a la plataforma antes del plazo máximo.
+**Para la entrega en PRADO**, haz un fichero `.ZIP` con todo el contenido anterior y súbelo a la plataforma antes del plazo máximo.
 
-Para la entrega desde GitHub (justo después de que pase el periodo de entrega por PRADO), será simplemente haciendo un `Fork` del repositorio de la asignatura en GitHub (https://github.com/manuparra/cc2122/) y luego incluyendo un directorio con tu nombre dentro de la carpeta `evaluation-practice-1`, y ahí incluir la documentación en formato `Markdown`, junto con los ficheros necesarios para el despliegue completo de los servicios.
+**Para la entrega desde GitHub** (justo después de que pase el periodo de entrega por PRADO), será simplemente haciendo un `Fork` del repositorio de la asignatura en GitHub (https://github.com/manuparra/cc2122/) y luego incluyendo un directorio con tu nombre dentro de la carpeta `evaluation-practice-1`, y ahí incluir la documentación en formato `Markdown`, junto con los ficheros necesarios para el despliegue completo de los servicios.
 
 La estructura para GitHub debe se la siguiente:
 
@@ -280,14 +275,21 @@ evaluation-practice-1/
                        media/
                              screenshot1.png
                              ...
+            alumnoXX/
+                       README.md
+                       docker-compose.yml
+                       media/
+                             screenshot1.png
+                             ...
+            ... 
 ```
 
 Hecho esto, crea un `Pull Request` al repositorio de la asignatura para poder incluir tu práctica en el repositorio principal.
 
 ### Plazos de entrega
 
-- Plazo de entrega en **PRADO**: de 21 de Marzo de 2022 a 17 de Abril de 2022.
-- Plazo de entrega en **GitHub**: de 18 de Abril al 20 de Abril de 2022. 
+- Plazo de entrega en **PRADO**: del 21 de Marzo de 2022 a 17 de Abril de 2022.
+- Plazo de entrega en **GitHub**: del 18 de Abril al 20 de Abril de 2022. 
 
 ### Defensa de la práctica
 
@@ -298,6 +300,7 @@ Será inmediatamente después de la entrega en GitHub en horario de clase de pr�
 - El conjunto de servicios debe fucionar correctamente y levantarse sin problemas
   - Los 4 servicios deben funcionar y estar configurados
 - Al menos deben existir 2 instancias de uno de los servicios (o bien Grafana o Prometheus server, o ambos).
+- Configurar Prometheus con los elementos descritos en la práctica.
 - Debes proveer de algún `script` para automatizar el despligue, ya sea con `docker-compose.yml`, un script en `bash`, o cualquier otro método que lo ponga todo el marcha.
 - Incluir en la documentación como se lanza la provisión de servicios.
 
