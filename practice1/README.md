@@ -1,6 +1,36 @@
 # Práctica 1: Desarrollo y despliegue de servicios de monitorización en Cloud Computing usando contenedores
 
-## Objetivos de la práctica
+<!-- vscode-markdown-toc -->
+* 1. [Objetivos de la práctica](#Objetivosdelaprctica)
+* 2. [Descripción del trabajo a desarrollar en la práctica](#Descripcindeltrabajoadesarrollarenlaprctica)
+	* 2.1. [Introducción](#Introduccin)
+	* 2.2. [Descripción del trabajo de la práctica](#Descripcindeltrabajodelaprctica)
+		* 2.2.1. [Prometheus](#Prometheus)
+		* 2.2.2. [Grafana](#Grafana)
+		* 2.2.3. [HAProxy](#HAProxy)
+	* 2.3. [Implementación de los servicios con contenedores](#Implementacindelosserviciosconcontenedores)
+		* 2.3.1. [Docker](#Docker)
+		* 2.3.2. [docker-compose](#docker-compose)
+		* 2.3.3. [Kubernetes](#Kubernetes)
+	* 2.4. [Características de cada servicio para despliegue con contenedores](#Caractersticasdecadaservicioparadespliegueconcontenedores)
+		* 2.4.1. [Servicio de `prometheus-server`](#Serviciodeprometheus-server)
+		* 2.4.2. [Servicio de `prometheus-node-exporter`](#Serviciodeprometheus-node-exporter)
+		* 2.4.3. [Servicio de `grafana`](#Serviciodegrafana)
+		* 2.4.4. [Servicio de alta disponibilidad `HAProxy`](#ServiciodealtadisponibilidadHAProxy)
+	* 2.5. [Ejemplo de configuración para `docker-compose`](#Ejemplodeconfiguracinparadocker-compose)
+* 3. [Entrega de la práctica a traves de PRADO y GitHub. Documentación de la práctica](#EntregadelaprcticaatravesdePRADOyGitHub.Documentacindelaprctica)
+	* 3.1. [Plazos de entrega](#Plazosdeentrega)
+	* 3.2. [Defensa de la práctica](#Defensadelaprctica)
+* 4. [Criterios de evaluación](#Criteriosdeevaluacin)
+* 5. [Criterios de evaluación opcionales](#Criteriosdeevaluacinopcionales)
+
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
+##  1. <a name='Objetivosdelaprctica'></a>Objetivos de la práctica
 
 - Crear servicios interconectados usando contenedores.
 - Conocer el despliegue de servicios en contenedores usando docker, docker-compose o kubernetes.
@@ -9,9 +39,9 @@
 - Soporte del servicio para múltiples usuarios al mismo tiempo.
 - Utilización de servicios de monitorización en para Cloud Computing.
 
-## Descripción del trabajo a desarrollar en la práctica
+##  2. <a name='Descripcindeltrabajoadesarrollarenlaprctica'></a>Descripción del trabajo a desarrollar en la práctica
 
-### Introducción
+###  2.1. <a name='Introduccin'></a>Introducción
 
 El despliegue de servicios en Cloud Computing es fundamental para poner en marcha funcionalidades que permitan tener aplicaciones y software además de infrastructuras con capacidades de soporte de múltiples usuarios y con posibilidades de escalado dinàmico. Aprovechar los recursos que ofrece Cloud Computing de forma fñexible es la clave para el correcto diseño de servicios y microservicios interconectados a través de contenedores y desplegados en la nube. 
 
@@ -24,7 +54,7 @@ En este contexto, el objetivo principal de esta práctica es el despligue de un 
 - Servicio de visualización de métricas
 - Servicio de alta disponibilidad para uno de los servicios anteriores.
 
-### Descripción del trabajo de la práctica
+###  2.2. <a name='Descripcindeltrabajodelaprctica'></a>Descripción del trabajo de la práctica
 
 Este trabajo consiste en proveer de un sistema de monitorización basado en Prometheus que permita capturar las métricas, insertarlas en su base de datos y publicarlas para poder visualizarlas a través de Grafana. Además de esto se requiere de un servicio que ofrezca alta disponibilidad para al menos uno de los servicios anteriores (por ejemplo Grafana o bien Prometheus).
 
@@ -35,7 +65,7 @@ Para esta práctica evaluable se desplegarán los siguientes servicios:
 
 Una breve descripción de los servicios individuales se detalla en las siguientes subsecciones.
 
-#### Prometheus
+####  2.2.1. <a name='Prometheus'></a>Prometheus
 
 Prometheus es un conjunto de herramientas de monitorización y alerta de sistemas de código abierto.
 
@@ -49,7 +79,7 @@ Las principales características de Prometheus son
 
 Prometheus tiene múltiples módulos, nosotros solo usaremos: Prometheus server y Prometheus Node Exporter.
 
-#### Grafana
+####  2.2.2. <a name='Grafana'></a>Grafana
 
 
 Grafana es una solución de código abierto para ejecutar analíticas de datos, extraer métricas que den sentido a la cantidad masiva de datos y monitorizar nuestras aplicaciones con la ayuda de  cuadros de mando personalizables.
@@ -58,17 +88,17 @@ Grafana se conecta con todas las fuentes de datos posibles, comúnmente conocida
 
 La herramienta nos ayuda a estudiar, analizar y supervisar los datos durante un período de tiempo, técnicamente llamado análisis de series de tiempo.
 
-#### HAProxy
+####  2.2.3. <a name='HAProxy'></a>HAProxy
 
 HAProxy es un proxy inverso de código abierto, muy rápido y fiable que ofrece alta disponibilidad, equilibrio de carga y proxy para aplicaciones basadas en TCP y HTTP. A lo largo de los años se ha convertido en el balanceador de carga de código abierto y se incluye en la mayoría de las distribuciones de Linux y últimamente se despliega por defecto en las plataformas en la nube.
 
-### Implementación de los servicios con contenedores
+###  2.3. <a name='Implementacindelosserviciosconcontenedores'></a>Implementación de los servicios con contenedores
 
 La idea de esta práctica es que el alumno sea capaz de poner en marcha un sistema basado en contenedores  para la monitorización que tenga los 3 servicios (4 en total: 2 de Prometheus[ 1 para node-exporter, y 1 para prometheus server], 1 para Grafana y 1 para HAProxy) citados anteriormente.
 
 Para esta implementación con contenedores, se puede elegir uno de los siguientes métodos de despliegue de servicios para Cloud Computing:
 
-#### Docker
+####  2.3.1. <a name='Docker'></a>Docker
 
 Para esta opción de despligue la práctica consistirá en desarrollar cada uno de los contenedores de forma individual para que alberguen cada uno de los servicios siguientes:
 
@@ -79,7 +109,7 @@ Para esta opción de despligue la práctica consistirá en desarrollar cada uno 
 
 Esta opción implica que los contenedores tienen que ejecutarse sin un orquestador, lo que requerirá que se cree un script para poder desplegar y también bajar todos los servicios. 
 
-#### docker-compose
+####  2.3.2. <a name='docker-compose'></a>docker-compose
 
 Para esta opción se requiere el uso de la herramienta de composición de servicios `docker-compose` que provee Docker. Para ello debes tenerla instalada en tu sistema si ya previamente tienes Docker instalado.
 
@@ -92,7 +122,7 @@ Con esta opción al igual que la anterior se requiere que se incluyan todos los 
 
 Dada la capacidad de `docker-compose` para automatizar el ciclo de vida de los servicios, solo será necesario crear el fichero `docker-compose.yml` que incluya todos los servicios descritos anteriormente y los demás fichero auxiliares de configuración.
 
-#### Kubernetes
+####  2.3.3. <a name='Kubernetes'></a>Kubernetes
 
 Este tipo de despliegue permite automatizar gran parte de las tareas y del ciclo de vida de los servicios, por lo que solo serán necesarios tener activos los servicios siguientes:
 
@@ -104,11 +134,11 @@ El servicio de HAProxy puede se sustituido por el equivalente en kubernetes y qu
 
 También para esta forma de despliegue se puede utilizar Helm.
 
-### Características de cada servicio para despliegue con contenedores 
+###  2.4. <a name='Caractersticasdecadaservicioparadespliegueconcontenedores'></a>Características de cada servicio para despliegue con contenedores 
 
 Para cada uno de los servicios a desplegar se pide un minimo de configuración que provea de algunos rasgos de escalabilidad y configuración relacionados con Cloud Computing.
 
-#### Servicio de `prometheus-server`
+####  2.4.1. <a name='Serviciodeprometheus-server'></a>Servicio de `prometheus-server`
 
 Se pide que el servicio de `prometheus-server` tenga:
 
@@ -157,24 +187,24 @@ prometheus:
 
 - Desde el fichero de despligue debe poder permitir poner disponible al menos 2 servicios, pero podrá ser escalable.
 
-#### Servicio de `prometheus-node-exporter`
+####  2.4.2. <a name='Serviciodeprometheus-node-exporter'></a>Servicio de `prometheus-node-exporter`
 
 - Al menos 2 nodos o 2 contenedores a monitorizar diferentes.
 - Utilizar el puerto por defecto 9100
   
 
-#### Servicio de `grafana`
+####  2.4.3. <a name='Serviciodegrafana'></a>Servicio de `grafana`
 
 - Al menos 2 servicios de Grafana funcionando bajo un balanceador de carga como HAProxy.
 - Configuración del servicio que incluya la fuente de datos de `prometheus-sever` de forma automática.
 - Incluir un dashboard por defecto para que puedan verse los datos de las métricas. 
 - Desde el fichero de despligue debe poder permitir poner disponible al menos 2 servicios, pero podrá ser escalable.
 
-#### Servicio de alta disponibilidad `HAProxy`
+####  2.4.4. <a name='ServiciodealtadisponibilidadHAProxy'></a>Servicio de alta disponibilidad `HAProxy`
 
 - Proveer de 1 servicio de HAProxy que permita balancear la carga de trabajo entre los contenedores disponibles que provean del servicio de Grafana.
 
-### Ejemplo de configuración para `docker-compose`
+###  2.5. <a name='Ejemplodeconfiguracinparadocker-compose'></a>Ejemplo de configuración para `docker-compose`
 
 Un ejemplo de la estructura de servicios que podrá desplegar `docker-compose.yml` es la siguiente:
 
@@ -243,7 +273,7 @@ services:
     ...
 ```
 
-## Entrega de la práctica a traves de PRADO y GitHub. Documentación de la práctica
+##  3. <a name='EntregadelaprcticaatravesdePRADOyGitHub.Documentacindelaprctica'></a>Entrega de la práctica a traves de PRADO y GitHub. Documentación de la práctica
 
 Para que la práctica sea evaluable debe ser entregada dentro del plazo requerido indicado en PRADO (link). Todas las prácticas que estén fuera de plazo no serán evaluadas y no podrán defenderse. 
 
@@ -286,16 +316,16 @@ evaluation-practice-1/
 
 Hecho esto, crea un `Pull Request` al repositorio de la asignatura para poder incluir tu práctica en el repositorio principal.
 
-### Plazos de entrega
+###  3.1. <a name='Plazosdeentrega'></a>Plazos de entrega
 
 - Plazo de entrega en **PRADO**: del 21 de Marzo de 2022 a 17 de Abril de 2022.
 - Plazo de entrega en **GitHub**: del 18 de Abril al 20 de Abril de 2022. 
 
-### Defensa de la práctica
+###  3.2. <a name='Defensadelaprctica'></a>Defensa de la práctica
 
 Será inmediatamente después de la entrega en GitHub en horario de clase de prácticas.
 
-## Criterios de evaluación
+##  4. <a name='Criteriosdeevaluacin'></a>Criterios de evaluación
 
 - El conjunto de servicios debe fucionar correctamente y levantarse sin problemas
   - Los 4 servicios deben funcionar y estar configurados
@@ -304,7 +334,7 @@ Será inmediatamente después de la entrega en GitHub en horario de clase de pr�
 - Debes proveer de algún `script` para automatizar el despligue, ya sea con `docker-compose.yml`, un script en `bash`, o cualquier otro método que lo ponga todo el marcha.
 - Incluir en la documentación como se lanza la provisión de servicios.
 
-## Criterios de evaluación opcionales
+##  5. <a name='Criteriosdeevaluacinopcionales'></a>Criterios de evaluación opcionales
 
 - Configuración en Kubernetes (con MiniKube) o sobre Helm.
 - Proveer de alta disponibilidad tanto en `Prometheus-server` como en `Grafana`. Esto requerirá al menos dos servicios de `HAProxy` para cubrir los servicios.
