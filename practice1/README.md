@@ -117,10 +117,10 @@ Para cada uno de los servicios a desplegar se pide un minimo de configuración q
 
 Se pide que el servicio de `prometheus-server` tenga:
 
-- Al menos 2 contenedores o 2 replicas (si se usa `docker-compose` o `Kubernetes`).
+- Al menos 1-2  contenedores o 1-2 replicas (si se usa `docker-compose` o `Kubernetes`) (dependerá donde uses el balanceador de carga).
 - Las métricas deben ser almacenadas en un volumen compartido. Para ello debes utilizar la opción `volumes` en el fichero de `docker-compose`.
 - Configurar el tiempo de retención de métricas a 1 semana. Para ello tendrás que utilizar la siguiente directiva: `--storage.tsdb.retention.time` para indicar el periodo.
-- Usar la plantilla de configuración siguiente para el servicio de Prometheus. En este fichero puedes incluir la parametrización que se indica o bien desde
+- Usar la plantilla de configuración siguiente para el servicio de Prometheus y su fichero de configuracion `prometheus.yml`:
 ```
 global:
   scrape_interval: 5s
@@ -137,12 +137,177 @@ scrape_configs:
           - ...
 ```
 
+Tambien puedes incluir los datos de configuración en el propio `docker-compose.yml` como por ejemplo se indica aquí:
+
+```
+...
+prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+      - '--storage.tsdb.retention.time=XXX' 
+    expose:
+      - 9090
+...
+```
+
+- Desde el fichero de despligue debe poder permitir poner disponible al menos 2 servicios, pero podrá ser escalable.
 
 #### Servicio de `prometheus-node-exporter`
 
 - Al menos 2 nodos o 2 contenedores a monitorizar diferentes.
+- Utilizar el puerto por defecto 9100
+  
 
 #### Servicio de `grafana`
 
-#### Servicio de `HAProxy`
+- Al menos 2 servicios de Grafana funcionando bajo un balanceador de carga como HAProxy.
+- Configuración del servicio que incluya la fuente de datos de `prometheus-sever` de forma automática.
+- Incluir un dashboard por defecto para que puedan verse los datos de las métricas. 
+- Desde el fichero de despligue debe poder permitir poner disponible al menos 2 servicios, pero podrá ser escalable.
+
+#### Servicio de alta disponibilidad `HAProxy`
+
+- Proveer de 1 servicio de HAProxy que permita balancear la carga de trabajo entre los contenedores disponibles que provean del servicio de Grafana.
+
+### Ejemplo de configuración para `docker-compose`
+
+Un ejemplo de la estructura de servicios que podrá desplegar `docker-compose.yml` es la siguiente:
+
+```
+version: '3.7'
+
+volumes:
+    prometheus_data: {}
+    grafana_data: {}
+
+networks:
+  frontend:
+  backend:
+
+services:
+
+  prometheus:
+    image: prom/prometheus:v2.1.0
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      # More configuration here
+    ports:
+      - 9090:9090
+    networks:
+      - backend
+    restart: always
+    ...
+
+  node-exporter:
+    image: prom/node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command: 
+      - '--path.procfs=/host/proc' 
+      - '--path.sysfs=/host/sys'
+      - ...
+      # Other option to configure here
+    ports:
+      - 9100:9100
+    networks:
+      - backend
+    restart: always
+    ...
+
+  grafana:
+    image: grafana/grafana
+    user: "472"
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    volumes:
+      # Data config here ...
+    env_file:
+      # Configuration here, using - ./grafana/config.monitoring
+    networks:
+      - backend
+      - frontend
+    restart: always
+    ...
+```
+
+## Entrega de la práctica a traves de PRADO y GitHub. Documentación de la práctica
+
+Para que la práctica sea evaluable debe ser entregada dentro del plazo requerido indicado en PRADO (link). Todas las prácticas que estén fuera de plazo no serán evaluadas y no podrán defenderse. 
+
+La entrega se hará **a través PRADO** en el periodo de entrega y también **a través de GitHub** justo después del periodo de entegra (esta parte será para la realización de la DEFENSA de la práctica).
+
+La documentación de la entrega debe contener:
+- 1 fichero en formato `markdown` llamado README.md que contenga la documentación de la practica que incluya los siguientes apartados:
+  - Nombre del alumno y grupo de prácticas
+  - Perfil de GitHub asociado
+  - Descripción de la práctica y problema a resolver
+  - Servicios desplegados y su configuración (Aquí explica el método para desplegar que has usado y como lo has hecho incluyendo todos los detalles necesarios)
+  - Conclusiones
+  - Referencias bibliográficas y recursos utilizados
+
+- Será necesario incluir todos los ficheros necesarios para el despliegue de los servicios que has creado.
+- Material auxiliar (imágenes para la documentación, ficheros de configuración, etc.)
+
+Para la entrega en PRADO, haz un fichero `.ZIP` con todo el contenido anterior y súbelo a la plataforma antes del plazo máximo.
+
+Para la entrega desde GitHub (justo después de que pase el periodo de entrega por PRADO), será simplemente haciendo un `Fork` del repositorio de la asignatura en GitHub (https://github.com/manuparra/cc2122/) y luego incluyendo un directorio con tu nombre dentro de la carpeta `evaluation-practice-1`, y ahí incluir la documentación en formato `Markdown`, junto con los ficheros necesarios para el despliegue completo de los servicios.
+
+La estructura para GitHub debe se la siguiente:
+
+```
+evaluation-practice-1/
+           manuelparra/
+                       README.md
+                       docker-compose.yml
+                       media/
+                             screenshot1.png
+                             ...
+```
+
+Hecho esto, crea un `Pull Request` al repositorio de la asignatura para poder incluir tu práctica en el repositorio principal.
+
+### Plazos de entrega
+
+- Plazo de entrega en **PRADO**: de 21 de Marzo de 2022 a 17 de Abril de 2022.
+- Plazo de entrega en **GitHub**: de 18 de Abril al 20 de Abril de 2022. 
+
+### Defensa de la práctica
+
+Será inmediatamente después de la entrega en GitHub en horario de clase de prácticas.
+
+## Criterios de evaluación
+
+- El conjunto de servicios debe fucionar correctamente y levantarse sin problemas
+  - Los 4 servicios deben funcionar y estar configurados
+- Al menos deben existir 2 instancias de uno de los servicios (o bien Grafana o Prometheus server, o ambos).
+- Debes proveer de algún `script` para automatizar el despligue, ya sea con `docker-compose.yml`, un script en `bash`, o cualquier otro método que lo ponga todo el marcha.
+- Incluir en la documentación como se lanza la provisión de servicios.
+
+## Criterios de evaluación opcionales
+
+- Configuración en Kubernetes (con MiniKube) o sobre Helm.
+- Proveer de alta disponibilidad tanto en `Prometheus-server` como en `Grafana`. Esto requerirá al menos dos servicios de `HAProxy` para cubrir los servicios.
+
+
+  
+
+
 
