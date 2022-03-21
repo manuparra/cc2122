@@ -33,25 +33,25 @@
 ##  1. <a name='Objetivosdelaprctica'></a>Objetivos de la práctica
 
 - Crear servicios interconectados usando contenedores.
-- Conocer el despliegue de servicios en contenedores usando docker, docker-compose o kubernetes.
+- Conocer el despliegue de servicios en contenedores usando docker, docker-compose y kubernetes.
 - Gestionar la escalabilidad de los servicios.
-- Implementar una estrucutra de contenedores para que provea de alta disponibilidad.
+- Implementar una estructura de contenedores para que provea de alta disponibilidad.
 - Soporte del servicio para múltiples usuarios al mismo tiempo.
-- Utilización de servicios de monitorización en para Cloud Computing.
+- Utilización de servicios de monitorización en Cloud Computing.
 
 ##  2. <a name='Descripcindeltrabajoadesarrollarenlaprctica'></a>Descripción del trabajo a desarrollar en la práctica
 
 ###  2.1. <a name='Introduccin'></a>Introducción
 
-El despliegue de servicios en Cloud Computing es fundamental para poner en marcha funcionalidades que permitan tener aplicaciones y software además de infrastructuras con capacidades de soporte de múltiples usuarios y con posibilidades de escalado dinàmico. Aprovechar los recursos que ofrece Cloud Computing de forma fñexible es la clave para el correcto diseño de servicios y microservicios interconectados a través de contenedores y desplegados en la nube. 
+El despliegue de servicios en Cloud Computing es fundamental para poner en marcha funcionalidades que permitan tener aplicaciones y software además de infrastructuras con capacidades de soporte para múltiples usuarios y con posibilidades de escalado dinàmico. Aprovechar los recursos que ofrece Cloud Computing de forma flexible es la clave para el correcto diseño de servicios y microservicios interconectados desplegados en la nube (mediante contenedores). 
 
-Hoy en día cada vez existen más dispositivos conectados a Internet y transmitiendo datos de todo tipo a través de los servicios y recursos que provee CloudComputing. Desde IoT, hasta industra, pasando por nuestros hogares, todos ellos están interconectados. Existe una necesidad de monitorizar servicios, infrastructuras y recursos que nos permitan conocer el estado de estos elementos en tiempo real y poder decidir sobre lo que esta ocurriendo en términos de consumo, ocupación de CPU, RAM, o espacio de almacenamiento entre otros. Estos sistemas de monitorización son extremadamente flexibles y muy modulares, lo que los hace excelentes para su desarrollo y despliegue utilizando contenedores u otras herramientas de orquestación.
+Hoy en día cada vez existen más dispositivos conectados a Internet y transmitiendo datos de todo tipo a través de los servicios y recursos que provee Cloud Computing. Desde Internet of Things (IoT), hasta la industra, pasando por nuestros hogares, todos ellos están interconectados. Existe una necesidad de monitorizar servicios, infrastructuras y recursos que nos permitan conocer el estado de estos elementos en tiempo real y poder decidir sobre lo que está ocurriendo en términos de consumo, uso de CPU, RAM, o espacio de almacenamiento entre otros. Estos sistemas de monitorización son extremadamente flexibles y muy modulares, lo que los hace excelentes para su desarrollo y despliegue utilizando contenedores y herramientas de orquestación.
 
-En este contexto, el objetivo principal de esta práctica es el despligue de un sistema de monitorización completo que proveea de los siguientes elementos:
+En este contexto, el objetivo principal de esta práctica es el despligue de un sistema de monitorización completo compuesto por los siguientes elementos:
 
-- Servicio de captura de métricas
+- Servicio de captura de métricas.
 - Servicio de exportación/publicación de métricas en nodos a monitorizar.
-- Servicio de visualización de métricas
+- Servicio de visualización de métricas.
 - Servicio de alta disponibilidad para uno de los servicios anteriores.
 
 ###  2.2. <a name='Descripcindeltrabajodelaprctica'></a>Descripción del trabajo de la práctica
@@ -60,10 +60,11 @@ Este trabajo consiste en proveer de un sistema de monitorización basado en Prom
 
 Para esta práctica evaluable se desplegarán los siguientes servicios:
 
--  Para los *servicios de monitorización* y *exportación de métricas* se usanrán las herramientas y servicios proporcionados por el motor de monitorización  Prometheus (https://prometheus.io/). - Para el servicio de visualización de métricas se usará el Grafana (https://grafana.com/). 
+- Para los *servicios de monitorización* y *exportación de métricas* se usanrán las herramientas y servicios proporcionados por el motor de monitorización  Prometheus (https://prometheus.io/).
+- Para el servicio de visualización de métricas se usará Grafana (https://grafana.com/). 
 - Para el servicio de alta disponibilidad se usará HAProxy u otro servicio similar (http://www.haproxy.org/).
 
-Una breve descripción de los servicios individuales se detalla en las siguientes subsecciones.
+En las siguientes subsecciones se detallan breves descripciones de los servicios individuales.
 
 ####  2.2.1. <a name='Prometheus'></a>Prometheus
 
