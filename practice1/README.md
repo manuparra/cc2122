@@ -72,7 +72,7 @@ Prometheus es un conjunto de herramientas de monitorización y alerta de sistema
 
 Prometheus recopila y almacena sus métricas como datos de series temporales, es decir, la información de las métricas se almacena con la marca de tiempo en la que se registró, junto con pares clave-valor opcionales llamados etiquetas que contienen los valores a monitorizar: CPU, RAM, etc.
 
-Las principales características de Prometheus son
+Las principales características de Prometheus son:
 
  - un modelo de datos multidimensional con datos de series temporales identificados por el nombre de la métrica y los pares clave/valor,
 - no depende del almacenamiento distribuido; los nodos del servidor son autónomos,
@@ -92,30 +92,30 @@ La herramienta permite estudiar, analizar y supervisar los datos durante un per�
 
 ####  2.2.3. <a name='HAProxy'></a>HAProxy
 
-HAProxy es un proxy inverso de código abierto, muy rápido y fiable que ofrece alta disponibilidad, equilibrio de carga y proxy para aplicaciones basadas en TCP y HTTP. A lo largo de los años se ha convertido en el balanceador de carga de código abierto y se incluye en la mayoría de las distribuciones de Linux y últimamente se despliega por defecto en las plataformas en la nube.
+HAProxy es un proxy inverso de código abierto, muy rápido y fiable que ofrece alta disponibilidad, equilibrio de carga y proxy para aplicaciones basadas en TCP y HTTP. A lo largo de los años se ha convertido en el balanceador de carga de código abierto por excelencia y se incluye en la mayoría de las distribuciones de Linux y últimamente se despliega por defecto en las plataformas en la nube.
 
 ###  2.3. <a name='Implementacindelosserviciosconcontenedores'></a>Implementación y despliegue de los servicios con contenedores
 
-La idea de esta práctica es que el alumno sea capaz de poner en marcha un sistema basado en contenedores  para la monitorización que tenga los 3 servicios (4 en total: 2 de Prometheus[ 1 para node-exporter, y 1 para prometheus server], 1 para Grafana y 1 para HAProxy) citados anteriormente.
+El objetivo de esta práctica es que el alumno sea capaz de poner en marcha un sistema basado en contenedores  para la monitorización que tenga los 3 servicios (4 en total: 2 de Prometheus[ 1 para node-exporter, y 1 para prometheus server], 1 para Grafana y 1 para HAProxy) citados anteriormente.
 
-Para esta implementación con contenedores, se puede elegir uno de los siguientes métodos de despliegue de servicios para Cloud Computing:
+Para esta implementación con contenedores, se debe realizar el despliegue en cada una de las siguientes modalidades:
 
 ####  2.3.1. <a name='Docker'></a>Docker
 
-Para esta opción de despligue la práctica consistirá en desarrollar cada uno de los contenedores de forma individual para que alberguen cada uno de los servicios siguientes:
+Para este despligue es necesario desarrollar cada uno de los contenedores de forma individual para que alberguen cada uno de los servicios siguientes:
 
 - Prometeus server
 - Prometeus node-exporter
 - Grafana community
 - HAProxy
 
-Esta opción implica que los contenedores tienen que ejecutarse sin un orquestador, lo que requerirá que se cree un script para poder desplegar y también bajar todos los servicios. 
+En esta modalidad, los contenedores tienen que ejecutarse sin un orquestador, lo que requerirá que se cree un script para poder desplegar y también bajar todos los servicios. 
 
 ####  2.3.2. <a name='docker-compose'></a>docker-compose
 
-Para esta opción se requiere el uso de la herramienta de composición de servicios `docker-compose` que provee Docker. Para ello debes tenerla instalada en tu sistema si ya previamente tienes Docker instalado.
+Para este despliegue se requiere el uso de la herramienta de composición de servicios `docker-compose` que provee Docker. Se trata de una herramienta complementaria a Docker, que debe instalarse además de Docker.
 
-Con esta opción al igual que la anterior se requiere que se incluyan todos los sevicios siguientes dentro del fichero de descripción de servicios a desplegar en `docker-compose`:
+Al igual que la anterior se requiere que se incluyan todos los sevicios dentro del fichero de descripción de servicios a desplegar en `docker-compose`:
 
 - Prometeus server
 - Prometeus node-exporter
@@ -132,21 +132,21 @@ Este tipo de despliegue permite automatizar gran parte de las tareas y del ciclo
 - Prometeus node-exporter
 - Grafana community
 
-El servicio de HAProxy puede se sustituido por el equivalente en kubernetes y que ofrece este tipo de servicio para poder balancear la carga entre los diferentes contenedores de cada `namespace`. 
+El servicio de HAProxy puede se sustituido por el equivalente en Kubernetes, que permite balancear la carga entre los diferentes contenedores de cada `namespace`. 
 
-También para esta forma de despliegue se puede utilizar Helm.
+Para esta forma de despliegue también se puede utilizar Helm.
 
 ###  2.4. <a name='Caractersticasdecadaservicioparadespliegueconcontenedores'></a>Características de cada servicio para despliegue con contenedores 
 
-Para cada uno de los servicios a desplegar se pide un minimo de configuración que provea de algunos rasgos de escalabilidad y configuración relacionados con Cloud Computing.
+Para cada uno de los servicios a desplegar se pide una configuración mínima que soporte escalabilidad.
 
 ####  2.4.1. <a name='Serviciodeprometheus-server'></a>Servicio de `prometheus-server`
 
 Se pide que el servicio de `prometheus-server` tenga:
 
-- Al menos 1-2  contenedores o 1-2 replicas (si se usa `docker-compose` o `Kubernetes`) (dependerá donde uses el balanceador de carga).
-- Las métricas deben ser almacenadas en un volumen compartido. Para ello debes utilizar la opción `volumes` en el fichero de `docker-compose`.
-- Configurar el tiempo de retención de métricas a 1 semana. Para ello tendrás que utilizar la siguiente directiva: `--storage.tsdb.retention.time` para indicar el periodo.
+- Al menos 1-2 contenedores o 1-2 réplicas (si se usa `docker-compose` o `Kubernetes`) (dependerá donde se use el balanceador de carga).
+- Las métricas deben ser almacenadas en un volumen compartido. Para ello se debe utilizar la opción `volumes` en el fichero de `docker-compose`.
+- Configurar el tiempo de retención de métricas a 1 semana. Para ello habrá que utilizar la siguiente directiva: `--storage.tsdb.retention.time` para indicar el periodo.
 - Usar la plantilla de configuración siguiente para el servicio de Prometheus y su fichero de configuracion `prometheus.yml`:
 ```
 global:
@@ -164,7 +164,7 @@ scrape_configs:
           - ...
 ```
 
-Tambien puedes incluir los datos de configuración en el propio `docker-compose.yml` como por ejemplo se indica aquí:
+También se puede incluir los datos de configuración en el propio `docker-compose.yml` como, por ejemplo, se indica aquí:
 
 ```
 ...
@@ -192,7 +192,7 @@ prometheus:
 ####  2.4.2. <a name='Serviciodeprometheus-node-exporter'></a>Servicio de `prometheus-node-exporter`
 
 - Al menos 2 nodos o 2 contenedores a monitorizar diferentes.
-- Utilizar el puerto por defecto 9100
+- Utilizar el puerto por defecto 9100.
   
 
 ####  2.4.3. <a name='Serviciodegrafana'></a>Servicio de `grafana`
@@ -282,11 +282,11 @@ Para que la práctica sea evaluable debe ser entregada dentro del plazo requerid
 La entrega se hará **a través PRADO** en el periodo de entrega y también **a través de GitHub** justo después del periodo de entegra (esta parte será para la realización de la DEFENSA de la práctica).
 
 La documentación de la entrega debe contener:
-- 1 fichero en formato `markdown` llamado README.md que contenga la documentación de la practica que incluya los siguientes apartados:
+- 1 fichero en formato `markdown` llamado README.md que contenga la documentación de la práctica que incluya los siguientes apartados:
   - Nombre del alumno y grupo de prácticas
   - Perfil de GitHub asociado
   - Descripción de la práctica y problema a resolver
-  - Servicios desplegados y su configuración (Aquí explica el método para desplegar que has usado y como lo has hecho incluyendo todos los detalles necesarios)
+  - Servicios desplegados y su configuración. (Incluye todos los detalles necesarios)
   - Conclusiones
   - Referencias bibliográficas y recursos utilizados
 
@@ -330,7 +330,7 @@ Será inmediatamente después de la entrega en GitHub en horario de clase de pr�
 ##  4. <a name='Criteriosdeevaluacin'></a>Criterios de evaluación
 
 - El conjunto de servicios debe fucionar correctamente y levantarse sin problemas
-  - Los 4 servicios deben funcionar y estar configurados
+- Los 4 servicios deben funcionar y estar configurados
 - Al menos deben existir 2 instancias de uno de los servicios (o bien Grafana o Prometheus server, o ambos).
 - Configurar Prometheus con los elementos descritos en la práctica.
 - Debes proveer de algún `script` para automatizar el despligue, ya sea con `docker-compose.yml`, un script en `bash`, o cualquier otro método que lo ponga todo el marcha.
