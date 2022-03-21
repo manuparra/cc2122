@@ -73,27 +73,28 @@ Prometheus es un conjunto de herramientas de monitorización y alerta de sistema
 Prometheus recopila y almacena sus métricas como datos de series temporales, es decir, la información de las métricas se almacena con la marca de tiempo en la que se registró, junto con pares clave-valor opcionales llamados etiquetas que contienen los valores a monitorizar: CPU, RAM, etc.
 
 Las principales características de Prometheus son
- - un modelo de datos multidimensional con datos de series temporales identificados por el nombre de la métrica y los pares clave/valor
- - no depende del almacenamiento distribuido; los nodos del servidor son autónomos
-- la recopilación de series temporales se realiza mediante un modelo de extracción a través de HTTP
-- los objetivos se descubren mediante el descubrimiento de servicios o la configuración estática
 
-Prometheus tiene múltiples módulos, nosotros solo usaremos: Prometheus server y Prometheus Node Exporter.
+ - un modelo de datos multidimensional con datos de series temporales identificados por el nombre de la métrica y los pares clave/valor,
+- no depende del almacenamiento distribuido; los nodos del servidor son autónomos,
+- la recopilación de series temporales se realiza mediante un modelo de extracción a través de HTTP,
+- los objetivos se descubren mediante el descubrimiento de servicios o la configuración estática.
+
+Prometheus tiene múltiples módulos. Para la práctica solo usaremos: Prometheus server y Prometheus Node Exporter.
 
 ####  2.2.2. <a name='Grafana'></a>Grafana
 
 
-Grafana es una solución de código abierto para ejecutar analíticas de datos, extraer métricas que den sentido a la cantidad masiva de datos y monitorizar nuestras aplicaciones con la ayuda de  cuadros de mando personalizables.
+Grafana es una solución de código abierto para ejecutar analíticas de datos, extraer métricas a partir de una cantidad masiva de datos y monitorizar aplicaciones con la ayuda de cuadros de mando personalizables.
 
-Grafana se conecta con todas las fuentes de datos posibles, comúnmente conocidas como bases de datos  como Graphite, Prometheus, Influx DB, ElasticSearch, MySQL, PostgreSQL, etc.
+Grafana puede conectarse con todas las fuentes de datos posibles, comúnmente conocidas como bases de datos  como Graphite, Prometheus, Influx DB, ElasticSearch, MySQL, PostgreSQL, etc.
 
-La herramienta nos ayuda a estudiar, analizar y supervisar los datos durante un período de tiempo, técnicamente llamado análisis de series de tiempo.
+La herramienta permite estudiar, analizar y supervisar los datos durante un período de tiempo. Técnicamente, es análisis de series de tiempo.
 
 ####  2.2.3. <a name='HAProxy'></a>HAProxy
 
 HAProxy es un proxy inverso de código abierto, muy rápido y fiable que ofrece alta disponibilidad, equilibrio de carga y proxy para aplicaciones basadas en TCP y HTTP. A lo largo de los años se ha convertido en el balanceador de carga de código abierto y se incluye en la mayoría de las distribuciones de Linux y últimamente se despliega por defecto en las plataformas en la nube.
 
-###  2.3. <a name='Implementacindelosserviciosconcontenedores'></a>Implementación de los servicios con contenedores
+###  2.3. <a name='Implementacindelosserviciosconcontenedores'></a>Implementación y despliegue de los servicios con contenedores
 
 La idea de esta práctica es que el alumno sea capaz de poner en marcha un sistema basado en contenedores  para la monitorización que tenga los 3 servicios (4 en total: 2 de Prometheus[ 1 para node-exporter, y 1 para prometheus server], 1 para Grafana y 1 para HAProxy) citados anteriormente.
 
