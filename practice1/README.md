@@ -341,8 +341,3 @@ Será inmediatamente después de la entrega en GitHub en horario de clase de pr�
 - Configuración en Kubernetes (con MiniKube) o sobre Helm.
 - Proveer de alta disponibilidad tanto en `Prometheus-server` como en `Grafana`. Esto requerirá al menos dos servicios de `HAProxy` para cubrir los servicios.
 
-
-  
-
-
-
