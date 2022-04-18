@@ -1,0 +1,63 @@
+version: '3.7'
+services:
+  Prometheus:
+    image: prom/prometheus:v2.30.3
+    container_name: prometheus
+    user: "${UID}:${GID}"
+    volumes:
+      - storage-data:/Prometheus/Prometheus
+      - ./Prometheus/Prometheus:/etc/prometheus/
+    command: 
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/etc/prometheus/data'
+      - '--storage.tsdb.retention.time=7d'
+    ports:
+      - 9090:9090
+    restart: always
+
+  Node-exporter:
+    image: prom/node-exporter
+    container_name: node-exporter
+    volumes:
+    - ./NodeExporter/proc:/host/proc:ro
+    - ./NodeExporter/sys:/host/sys:ro
+    - ./NodeExporter/:/rootfs:ro
+    user: "${UID}:${GID}"
+    ports:
+      - 9100:9100
+    restart: always
+
+  Grafana:
+    image: grafana/grafana-oss
+    container_name: grafana
+    volumes:
+      - ./Grafana/data:/var/lib/grafana
+      - ./Grafana/provisioning:/etc/grafana/provisioning"
+    user: "${UID}:${GID}"
+    expose:
+      - "3000"
+    restart: always
+
+  Grafana-Second:
+    image: grafana/grafana-oss
+    container_name: grafana-second
+    volumes:
+      - ./Grafana-second/data:/var/lib/grafana
+      - ./Grafana-second/provisioning:/etc/grafana/provisioning"
+    user: "${UID}:${GID}"
+    expose:
+      - "3000"
+    restart: always
+  HAProxy:
+    image: haproxy
+    container_name: haproxy
+    volumes:
+      - ./HAProxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    user: "root:root"
+    ports:
+      - 80:80
+      - 8404:8404
+    restart: always
+volumes:
+  storage-data:
+    
