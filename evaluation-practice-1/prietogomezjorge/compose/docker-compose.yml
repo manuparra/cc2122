@@ -1,0 +1,114 @@
+version: "3.1"
+
+volumes:
+    prometheus-data: {}
+    grafana-data: {}
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus/config:/etc/prometheus/
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=7d'
+    expose:
+      - 9090
+    networks:
+      - backend
+  
+  haproxy:
+    image: haproxy:latest
+    container_name: haproxy
+    volumes:
+        - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    networks:
+        - backend
+        - frontend
+    ports:
+        - "8080:80" 
+        - "8404:8404"
+
+  haproxy-front:
+    image: haproxy:latest
+    container_name: haproxy-front
+    volumes:
+      - ./haproxy_front/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    depends_on:
+      - grafana-1
+      - grafana-2
+    networks:
+      - frontend
+    ports:
+      - "8081:3000"
+      - "8405:8404"
+
+  node-exporter-1:
+    image: prom/node-exporter:latest
+    restart: unless-stopped
+    container_name: node-exporter-1
+    expose:
+      - 9100
+    networks:
+      - backend
+  
+  node-exporter-2:
+    image: prom/node-exporter:latest
+    restart: unless-stopped
+    container_name: node-exporter-2
+    expose:
+      - 9100
+    networks:
+      - backend
+
+  grafana-1:
+    image: grafana/grafana:latest
+    container_name: grafana-1
+    restart: unless-stopped
+    volumes:
+      - ./grafana/provisioning/dashboard:/etc/grafana/provisioning/dashboards
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/db/defaults.ini:/usr/share/grafana/conf/defaults.ini
+    networks:
+      - backend
+      - frontend
+    depends_on:
+      - prometheus
+    expose:
+      - 3000
+
+  grafana-2:
+    image: grafana/grafana:latest
+    container_name: grafana-2
+    restart: unless-stopped
+    volumes:
+      - ./grafana/provisioning/dashboard:/etc/grafana/provisioning/dashboards
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/db/defaults.ini:/usr/share/grafana/conf/defaults.ini
+    networks:
+      - backend
+      - frontend
+    depends_on:
+      - prometheus
+    expose:
+      - 3000
+
+  sqlite3:
+    image: nouchka/sqlite3:latest
+    container_name: sqlite3
+    stdin_open: true
+    tty: true
+    networks:
+      - frontend
+    volumes:
+      - ./db/:/root/db/
