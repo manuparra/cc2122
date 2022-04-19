@@ -1,0 +1,18 @@
+# my global config
+global:
+  scrape_interval: 5s
+  scrape_timeout: 5s
+
+rule_files:
+  - alert.yml
+
+scrape_configs:
+  - job_name: services
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - 'localhost:9090'
+          - 'node-exporterA:9100'
+          - 'node-exporterB:9100'
+          - 'grafanaA:3000'
+          - 'grafanaB:3000'
