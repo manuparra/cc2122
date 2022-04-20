@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose --file ../compose/docker-compose.yml convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: haproxy-front
+  name: haproxy-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: haproxy-front
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose --file ../compose/docker-compose.yml convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/frontend: "true"
+        io.kompose.service: haproxy-front
+    spec:
+      containers:
+        - image: haproxy:latest
+          name: haproxy-front
+          ports:
+            - containerPort: 3000
+            - containerPort: 8404
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/local/etc/haproxy/haproxy.cfg
+              name: haproxy-front-claim0
+              readOnly: true
+      restartPolicy: Always
+      volumes:
+        - name: haproxy-front-claim0
+          persistentVolumeClaim:
+            claimName: haproxy-front-claim0
+            readOnly: true
+status: {}

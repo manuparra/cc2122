@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose --file ../compose/docker-compose.yml convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: grafana-2
+  name: grafana-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: grafana-2
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose --file ../compose/docker-compose.yml convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/backend: "true"
+        io.kompose.network/frontend: "true"
+        io.kompose.service: grafana-2
+    spec:
+      containers:
+        - image: grafana/grafana:latest
+          name: grafana-2
+          ports:
+            - containerPort: 3000
+          resources: {}
+          volumeMounts:
+            - mountPath: /etc/grafana/provisioning/dashboards
+              name: grafana-2-claim0
+            - mountPath: /etc/grafana/provisioning/datasources
+              name: grafana-2-claim1
+            - mountPath: /usr/share/grafana/conf/defaults.ini
+              name: grafana-2-claim2
+      restartPolicy: Always
+      volumes:
+        - name: grafana-2-claim0
+          persistentVolumeClaim:
+            claimName: grafana-2-claim0
+        - name: grafana-2-claim1
+          persistentVolumeClaim:
+            claimName: grafana-2-claim1
+        - name: grafana-2-claim2
+          persistentVolumeClaim:
+            claimName: grafana-2-claim2
+status: {}
