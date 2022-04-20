@@ -1,0 +1,73 @@
+version: "3"
+
+networks:
+  frontend:
+  backend:
+
+services:
+
+  haproxy:
+    image: haproxy:1.6
+    volumes:
+      - ./haproxy:/haproxy-override
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    ports:
+      - "8080:80"
+    networks:
+      backend:
+    restart: always
+
+
+  prometheus:
+    image: prom/prometheus:v2.30.3
+    expose:
+      - "9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - ./prometheus-data:/prometheus
+    command:
+      - "--web.enable-lifecycle"
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--storage.tsdb.retention.time=7d"
+      - "--storage.tsdb.no-lockfile"
+    restart: always
+    networks:
+      - backend
+    deploy:
+      replicas: 2
+
+
+  grafana:
+    image: grafana/grafana-oss
+    expose:
+      - "3000"
+    volumes:
+      - ./grafana:/var/lib/grafana
+    networks:
+      - backend
+      - frontend
+    restart: always
+    deploy:
+      replicas: 2
+
+
+  node-exporter:
+    image: prom/node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+    expose:
+      - "9100"
+    networks:
+      - backend
+    restart: always
+    deploy:
+      replicas: 2
+
