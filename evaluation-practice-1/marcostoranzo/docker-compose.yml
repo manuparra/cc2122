@@ -1,0 +1,127 @@
+version: "3.7"
+
+volumes:
+  prometheus_data: {}
+  grafana_data: {}
+
+networks:
+  frontend:
+  backend:
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.30.3
+
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=1w"
+
+    ports:
+      - 9090:9090
+
+    networks:
+      - backend
+
+    restart: always
+
+  node-exporter1:
+    image: prom/node-exporter
+
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+
+    ports:
+      - 9100:9100
+
+    networks:
+      - backend
+
+    restart: always
+
+  node-exporter2:
+    image: prom/node-exporter
+
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+
+    ports:
+      - 9200:9100
+
+    networks:
+      - backend
+
+    restart: always
+  grafana1:
+    image: grafana/grafana
+
+    user: "472"
+
+    depends_on:
+      - prometheus
+
+    ports:
+      - 3000:3000
+
+    volumes:
+      - ./grafana/:/etc/grafana/
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/config.ini:/etc/grafana/config.ini
+
+    networks:
+      - backend
+      - frontend
+
+    restart: always
+
+  grafana2:
+    image: grafana/grafana
+
+    user: "473"
+
+    depends_on:
+      - prometheus
+
+    ports:
+      - 3100:3000
+
+    volumes:
+      - ./grafana/:/etc/grafana/
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/config.ini:/etc/grafana/config.ini
+
+    networks:
+      - backend
+      - frontend
+
+    restart: always
+
+  haproxy:
+    image: haproxy:1.6
+
+    volumes:
+      - ./haproxy:/haproxy-override
+      - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+
+    ports:
+      - "8080:80"
+
+    depends_on:
+      - grafana1
+      - grafana2
