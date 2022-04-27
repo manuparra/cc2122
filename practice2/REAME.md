@@ -80,7 +80,29 @@ def ffunction(input_URL)
   return imagefaces or save_image(output_URL)  
 ```
 
+Specifically for the OpenFaaS platform example, the function would be created in this way:
 
+```
+$ faas-cli new --lang python facesdetection-python
+```
+
+This creates three files for you:
+
+```
+facesdetection-python/handler.py
+facesdetection-python/requirements.txt
+facesdetection-python.yml
+```
+
+Let's edit the `handler.py` file:
+
+```
+def handle(req):
+    ...
+    ...
+    ...
+    
+```
 
 
 
