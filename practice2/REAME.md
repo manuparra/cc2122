@@ -67,8 +67,16 @@ Having done this, you will then need to create the role within the platform and 
 
 **For function development you can choose any language that is supported by the functions-as-a-service platform. If you want to use another language for function design, you will need to implement the function from a container.**
 
+If you are using node.js, java, or other languages, check the following examples:
 
-## Function design
+- R https://github.com/openfaas/faas/tree/master/sample-functions/BaseFunctions/R
+- GoLang https://github.com/openfaas/faas/tree/master/sample-functions/BaseFunctions/java
+- Java https://github.com/openfaas/faas/tree/master/sample-functions/BaseFunctions
+- Node https://github.com/openfaas/faas/tree/master/sample-functions/BaseFunctions/node
+- Python https://github.com/openfaas/faas/tree/master/sample-functions/BaseFunctions/python
+
+
+## Function design (template with Python)
 
 For the design of the face recognition function you can use pre-trained models that allow you to do the detection without having to create a model from scratch. 
 
@@ -132,8 +140,29 @@ for (x, y, w, h) in faces:
 cv2.imshow('img', img)
 ```
 
+> **Remember that the result of the image composition must be sent to the user or saved in the service so that it can be downloaded or viewed.**
 
 
+##  Delivery of practice
 
-## References
+The delivery of the practice consists of 3 parts:
+
+1. Development and description of the steps to set up the platform for the FaaS functions service, in one of the existing platforms (OpenFaas, OpenWhisk...).
+2. Implementation of the face detection function in the selected language (python, node.js, etc.).
+3. Steps for the deployment of the implemented function within the selected OpenFaaS platform.
+
+All these steps must be documented in the delivery of the practice. For the delivery, all the material must be uploaded in a zip file to PRADO by the corresponding deadline. Subsequently, the day after the delivery, a Pull Request will be made to the repository of the subject to store the practice 2 as it was done in the first practice.
+
+The zip file must contain the following:
+
+- Platform deployment material
+- Implemented function and its code
+- Script to deploy the function on the chosen platform.
+
+Deadline for submission: 16-May-2022 23:59:00
+
+
+## References 
+
+- FaaS Examples and Function deployment: https://github.com/openfaas/faas/tree/master/sample-functions
 
