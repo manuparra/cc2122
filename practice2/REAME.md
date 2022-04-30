@@ -65,6 +65,9 @@ For this you will need the following in terms of platforms/tools to install:
 
 Having done this, you will then need to create the role within the platform and add it to the role platform catalog.
 
+**For function development you can choose any language that is supported by the functions-as-a-service platform. If you want to use another language for function design, you will need to implement the function from a container.**
+
+
 ## Function design
 
 For the design of the face recognition function you can use pre-trained models that allow you to do the detection without having to create a model from scratch. 
@@ -104,5 +107,33 @@ def handle(req):
     
 ```
 
+Where you have to include the functionality of the function.
 
+
+### Generic example function with Python
+
+This is an example of code that detects faces with a pretrained classifier:
+
+```
+import cv2
+
+# Load the cascade Classifier
+face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+# Read the input image
+img = cv2.imread('test.jpg')
+# Convert into grayscale
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+# Detect faces
+faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+# Draw rectangle around the faces
+for (x, y, w, h) in faces:
+    cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+# Display the output
+cv2.imshow('img', img)
+```
+
+
+
+
+## References
 
