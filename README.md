@@ -41,3 +41,22 @@ Containers with Docker, Singularity and Kubernetes.
 - [Introduction to kubernetes](./session3/README.md#session-3-kubernetes)
 - [How to deploy your local kubernets instance (with minikube)](./session3/README.md#session-3-kubernetes)
 - Manage, deploy and usage of the kubernetes
+
+## Session 4
+
+Managing Azure VMs: Create, deploy and add services
+
+-[Azure plaform](https://github.com/manuparra/cc2122/tree/main/session4)
+
+## Session 5 
+
+Docker and docker-compose orchestation
+
+- [Docker and docker-compose examples. Practice presentation](https://github.com/manuparra/cc2122/tree/main/session5)
+
+## Session 6
+
+Introduction to MongoDB
+
+- [MongoDB](https://github.com/manuparra/cc2122/tree/main/session6)
+
