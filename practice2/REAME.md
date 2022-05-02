@@ -1,30 +1,30 @@
 # Practice 2
 
-Implementing facial recognition within a Functions-as-a-Service platform
+Implementing facial recognition using Functions-as-a-Service
 
 
 **Objectives of the practice:**
 
-- Install and deploy tool and cloud platform for container orchestration: Kubernetes.
-- Deploy the functionality of the functions catalogue and functions service through OpenWisk or OpenFaaS.
-- Implement a scalable function to recognise images of people. 
+- Install and deploy a tool for container orchestration: Kubernetes.
+- Deploy the functionality of the function catalogue and functions service through OpenWisk or OpenFaaS.
+- Implement a scalable function that would become a component for biometric identitication of users based on face images. 
 
 ## Description of the practice
 
-Function-as-a-Service (FaaS) is a serverless way to execute modular pieces of code on the edge. FaaS lets developers write and update a piece of code on the fly, which can then be executed in response to an event, such as a user clicking on an element in a web application. This makes it easy to scale code and is a cost-efficient way to implement microservices.
+Function-as-a-Service (FaaS) is a serverless way to execute modular pieces of code. FaaS lets developers write and update a piece of code on the fly, which can then be executed in response to an event, such as a user clicking on an element in a web application. This makes it easy to scale code and is a cost-efficient way to implement microservices.
 
 **What are the advantages of using FaaS?**
 
-*Improved developer velocity*: With FaaS, developers can spend more time writing application logic and less time worrying about servers and deploys. This typically means a much faster development turnaround.
+*Improved developer velocity*: With FaaS, developers can spend more time writing application logic and less time worrying about servers and deployment. This typically means a much faster development turnaround.
 
-*Built-in scalability*: Since FaaS code is inherently scalable, developers don’t have to worry about creating contingencies for high traffic or heavy use. The serverless provider will handle all of the scaling concerns.
+*Built-in scalability*: Since FaaS code is inherently scalable, developers do not have to worry about contingencies due to high traffic or heavy use. The serverless provider will handle all of the scaling concerns.
 
-*Cost efficiency*:Unlike traditional cloud providers, serverless FaaS providers do not charge their clients for idle computation time. Because of this, clients only pay for as much computation time as they use, and do not need to waste money over-provisioning cloud resources.
+*Cost efficiency*: Unlike traditional cloud providers, serverless FaaS providers do not charge their clients for idle computation time. Because of this, clients only pay for as much computation time as they use, and do not need to waste money over-provisioning cloud resources.
 
 
 **What are the drawbacks of FaaS?**
 
-*Less system control*:Having a third party manage part of the infrastructure makes it tough to understand the whole system and adds debugging challenges.
+*Less system control*: Having a third party managing part of the infrastructure makes it tough to understand the whole system and adds debugging challenges.
 
 *More complexity required for testing*: It can be very difficult to incorporate FaaS code into a local testing environment, making thorough testing of an application a more intensive task.
 
@@ -40,19 +40,19 @@ Serverless computing allows developers to purchase backend services on a flexibl
 
 The term ‘serverless’ is somewhat misleading, as there are still servers providing these backend services, but all of the server space and infrastructure concerns are handled by the vendor. Serverless means that the developers can do their work without having to worry about servers at all.
 
-**Is Serverless for you**
+**Is Serverless for you?**
 
 Developers who want to decrease their go-to-market time and build lightweight, flexible applications that can be expanded or updated quickly may benefit greatly from serverless computing.
 
-Serverless architectures will reduce costs for applications that see inconsistent usage, with peak periods alternating with times of little to no traffic. For such applications, purchasing a server or a block of servers that are constantly running and always available, even when unused, may be a waste of resources. A serverless setup will respond instantly when needed and will not incur costs when at rest.
+Serverless architectures will reduce the cost for applications that see inconsistent usage, with peak periods alternating with times of little to no traffic. For such applications, purchasing a server or a block of servers that are constantly running and always available, even when unused, may be a waste of resources. A serverless setup will respond instantly when needed and will not incur costs when at rest.
 
 Also, developers who want to push some or all of their application functions close to end users for reduced latency will require at least a partially serverless architecture, since doing so necessitates moving some processes out of the origin server.
 
-**And now, what else? - What to implement**
+**And now, what else? - What to implement?**
 
-Now that you have been introduced to what Serverless is all about, I think it is time to discuss what this practice is all about. 
+Now that you have been introduced to what Serverless is all about, it is time to discuss what this practice is all about. 
 
-The main idea of the practice is to create a function or several functions that allow you to:
+The main idea of the practice is to create one or more functions that allow you to:
 
 - Capture/collect an image (e.g. from a URL) as input to the function.
 - The function must detect the faces that appear
@@ -83,7 +83,7 @@ For the design of the face recognition function you can use pre-trained models t
 The pseudocode function could look like the following:
 
 ```
-def ffunction(input_URL)
+def function(input_URL)
   model=load_faces_models
   image=read_image_from_URL
   faces=detect_faces(model,image)
@@ -115,12 +115,12 @@ def handle(req):
     
 ```
 
-Where you have to include the functionality of the function.
+where you have to include the functionality of the function.
 
 
 ### Generic example function with Python
 
-This is an example of code that detects faces with a pretrained classifier:
+This is an example of code that detects faces using a pretrained classifier:
 
 ```
 import cv2
@@ -147,11 +147,11 @@ cv2.imshow('img', img)
 
 The delivery of the practice consists of 3 parts:
 
-1. Development and description of the steps to set up the platform for the FaaS functions service, in one of the existing platforms (OpenFaas, OpenWhisk...).
+1. Development and description of the steps to set up the platform for the FaaS functions service, in one of the existing platforms (OpenFaas, OpenWhisk, ...).
 2. Implementation of the face detection function in the selected language (python, node.js, etc.).
 3. Steps for the deployment of the implemented function within the selected OpenFaaS platform.
 
-All these steps must be documented in the delivery of the practice. For the delivery, all the material must be uploaded in a zip file to PRADO by the corresponding deadline. Subsequently, the day after the delivery, a Pull Request will be made to the repository of the subject to store the practice 2 as it was done in the first practice.
+All these steps must be documented in the delivery of the practice. For the delivery, all the material must be packaged in a zip file and uploaded to PRADO by the  deadline set. Subsequently, the day after the delivery, a Pull Request will be made to the repository of the subject to store the practice 2 as it was done in the first practice.
 
 The zip file must contain the following:
 
